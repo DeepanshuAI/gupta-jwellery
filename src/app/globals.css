@@ -1,0 +1,206 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════
+   GUPTA JWELLERY — Design System
+   Luxury = Restraint. Typography + Space + Photography.
+   ═══════════════════════════════════════════════════════════ */
+
+@theme inline {
+  /* ── Brand Colors ── */
+  --color-obsidian: #141414;
+  --color-ivory: #F7F3EC;
+  --color-champagne: #C6A15B;
+  --color-charcoal: #24211D;
+  --color-neutral: #E6DED1;
+  --color-champagne-light: #D4B577;
+  --color-champagne-dark: #A8863D;
+
+  /* ── Semantic Colors ── */
+  --color-background: #F7F3EC;
+  --color-foreground: #24211D;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F0EBE3;
+  --color-border: #E6DED1;
+  --color-border-light: #F0EBE3;
+  --color-muted: #8A8278;
+
+  /* ── Typography ── */
+  --font-display: var(--font-cormorant);
+  --font-body: var(--font-dm-sans);
+}
+
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-charcoal);
+  font-family: var(--font-body), system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+::selection {
+  background-color: var(--color-champagne);
+  color: var(--color-obsidian);
+}
+
+/* ── Typography Hierarchy ── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display), 'Georgia', serif;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw + 1rem, 5rem);
+}
+
+h2 {
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 3rem);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2vw + 0.25rem, 1.75rem);
+}
+
+/* ── Focus States ── */
+*:focus-visible {
+  outline: 2px solid var(--color-champagne);
+  outline-offset: 2px;
+}
+
+/* ── Scrollbar (subtle) ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-ivory);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-champagne);
+}
+
+/* ── Image defaults ── */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Custom Animations (referenced by Framer Motion + Tailwind) ── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* ── Luxury Button Base ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--color-obsidian);
+  color: var(--color-ivory);
+}
+
+.btn-primary:hover {
+  background: var(--color-charcoal);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-obsidian);
+  border: 1px solid var(--color-obsidian);
+}
+
+.btn-secondary:hover {
+  background: var(--color-obsidian);
+  color: var(--color-ivory);
+}
+
+.btn-champagne {
+  background: var(--color-champagne);
+  color: var(--color-obsidian);
+}
+
+.btn-champagne:hover {
+  background: var(--color-champagne-dark);
+  color: white;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-charcoal);
+  padding: 0.5rem 0;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--color-charcoal);
+}
+
+.btn-ghost:hover {
+  border-color: var(--color-champagne);
+  color: var(--color-champagne);
+}
+
+/* ── WhatsApp Green ── */
+.btn-whatsapp {
+  background: #25D366;
+  color: white;
+}
+
+.btn-whatsapp:hover {
+  background: #1ebe57;
+}
