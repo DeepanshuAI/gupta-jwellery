@@ -3,13 +3,18 @@
 import { useState, useMemo } from 'react';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SectionHeading } from '@/components/SectionHeading';
 import { ProductCard } from '@/components/ProductCard';
 import { products } from '@/data/products';
 import { categories } from '@/data/categories';
 
 const materials = ['Gold', 'Diamond', 'Silver', 'Gemstone'];
 const styles = ['Traditional', 'Contemporary', 'Minimal', 'Bridal', 'Statement', 'Everyday'];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 1, ease: [0.21, 0.47, 0.32, 0.98] },
+};
 
 export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -29,22 +34,22 @@ export default function ShopPage() {
   const hasFilters = selectedCategory !== 'all' || selectedMaterial !== 'all' || selectedStyle !== 'all';
 
   const FilterContent = () => (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Category */}
       <div>
-        <h3 className="text-xs tracking-[0.12em] uppercase text-[var(--color-charcoal)] font-medium mb-4">Category</h3>
-        <div className="space-y-2">
+        <h3 className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-obsidian)] font-medium mb-6">Category</h3>
+        <div className="space-y-4">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`block text-sm transition-colors ${selectedCategory === 'all' ? 'text-[var(--color-champagne)] font-medium' : 'text-[var(--color-muted)] hover:text-[var(--color-charcoal)]'}`}
+            className={`block text-xs tracking-[0.05em] transition-colors font-light ${selectedCategory === 'all' ? 'text-[var(--color-champagne-dark)] border-b border-[var(--color-champagne-dark)] pb-1 inline-block' : 'text-[var(--color-muted)] hover:text-[var(--color-obsidian)]'}`}
           >
-            All Jewellery
+            All Pieces
           </button>
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`block text-sm transition-colors ${selectedCategory === cat.id ? 'text-[var(--color-champagne)] font-medium' : 'text-[var(--color-muted)] hover:text-[var(--color-charcoal)]'}`}
+              className={`block text-xs tracking-[0.05em] transition-colors font-light ${selectedCategory === cat.id ? 'text-[var(--color-champagne-dark)] border-b border-[var(--color-champagne-dark)] pb-1 inline-block' : 'text-[var(--color-muted)] hover:text-[var(--color-obsidian)]'}`}
             >
               {cat.name}
             </button>
@@ -54,11 +59,11 @@ export default function ShopPage() {
 
       {/* Material */}
       <div>
-        <h3 className="text-xs tracking-[0.12em] uppercase text-[var(--color-charcoal)] font-medium mb-4">Material</h3>
-        <div className="space-y-2">
+        <h3 className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-obsidian)] font-medium mb-6">Material</h3>
+        <div className="space-y-4">
           <button
             onClick={() => setSelectedMaterial('all')}
-            className={`block text-sm transition-colors ${selectedMaterial === 'all' ? 'text-[var(--color-champagne)] font-medium' : 'text-[var(--color-muted)] hover:text-[var(--color-charcoal)]'}`}
+            className={`block text-xs tracking-[0.05em] transition-colors font-light ${selectedMaterial === 'all' ? 'text-[var(--color-champagne-dark)] border-b border-[var(--color-champagne-dark)] pb-1 inline-block' : 'text-[var(--color-muted)] hover:text-[var(--color-obsidian)]'}`}
           >
             All Materials
           </button>
@@ -66,7 +71,7 @@ export default function ShopPage() {
             <button
               key={m}
               onClick={() => setSelectedMaterial(m)}
-              className={`block text-sm transition-colors ${selectedMaterial === m ? 'text-[var(--color-champagne)] font-medium' : 'text-[var(--color-muted)] hover:text-[var(--color-charcoal)]'}`}
+              className={`block text-xs tracking-[0.05em] transition-colors font-light ${selectedMaterial === m ? 'text-[var(--color-champagne-dark)] border-b border-[var(--color-champagne-dark)] pb-1 inline-block' : 'text-[var(--color-muted)] hover:text-[var(--color-obsidian)]'}`}
             >
               {m}
             </button>
@@ -76,11 +81,11 @@ export default function ShopPage() {
 
       {/* Style */}
       <div>
-        <h3 className="text-xs tracking-[0.12em] uppercase text-[var(--color-charcoal)] font-medium mb-4">Style</h3>
-        <div className="space-y-2">
+        <h3 className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-obsidian)] font-medium mb-6">Style</h3>
+        <div className="space-y-4">
           <button
             onClick={() => setSelectedStyle('all')}
-            className={`block text-sm transition-colors ${selectedStyle === 'all' ? 'text-[var(--color-champagne)] font-medium' : 'text-[var(--color-muted)] hover:text-[var(--color-charcoal)]'}`}
+            className={`block text-xs tracking-[0.05em] transition-colors font-light ${selectedStyle === 'all' ? 'text-[var(--color-champagne-dark)] border-b border-[var(--color-champagne-dark)] pb-1 inline-block' : 'text-[var(--color-muted)] hover:text-[var(--color-obsidian)]'}`}
           >
             All Styles
           </button>
@@ -88,7 +93,7 @@ export default function ShopPage() {
             <button
               key={s}
               onClick={() => setSelectedStyle(s.toLowerCase())}
-              className={`block text-sm transition-colors ${selectedStyle === s.toLowerCase() ? 'text-[var(--color-champagne)] font-medium' : 'text-[var(--color-muted)] hover:text-[var(--color-charcoal)]'}`}
+              className={`block text-xs tracking-[0.05em] transition-colors font-light ${selectedStyle === s.toLowerCase() ? 'text-[var(--color-champagne-dark)] border-b border-[var(--color-champagne-dark)] pb-1 inline-block' : 'text-[var(--color-muted)] hover:text-[var(--color-obsidian)]'}`}
             >
               {s}
             </button>
@@ -99,35 +104,48 @@ export default function ShopPage() {
   );
 
   return (
-    <div className="pt-4 pb-16 lg:pb-24">
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
-        <SectionHeading
-          title="Explore Jewellery"
-          subtitle="Discover pieces for everyday elegance, celebrations and special moments."
-        />
+    <div className="bg-[var(--color-ivory)] min-h-screen pt-24 lg:pt-32 pb-24">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-10 lg:px-16">
+        
+        {/* Header */}
+        <div className="mb-16 lg:mb-24 text-center lg:text-left">
+          <motion.p 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
+            className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-champagne-dark)] mb-6"
+          >
+            The Boutique
+          </motion.p>
+          <motion.h1 
+            {...fadeUp}
+            className="font-[family-name:var(--font-display)] text-4xl md:text-5xl lg:text-6xl text-[var(--color-obsidian)] leading-[1.1]"
+          >
+            Curated pieces for <br className="hidden md:block" />
+            <span className="italic text-[var(--color-champagne-dark)]">your private collection.</span>
+          </motion.h1>
+        </div>
 
         {/* Mobile filter toggle */}
-        <div className="lg:hidden flex items-center justify-between mb-6">
-          <p className="text-sm text-[var(--color-muted)]">{filtered.length} pieces</p>
+        <div className="lg:hidden flex items-center justify-between mb-10 border-b border-[var(--color-border)] pb-4">
+          <p className="text-xs tracking-[0.1em] text-[var(--color-muted)] uppercase font-light">{filtered.length} pieces</p>
           <button
             onClick={() => setMobileFiltersOpen(true)}
-            className="flex items-center gap-2 text-sm font-medium text-[var(--color-charcoal)]"
+            className="flex items-center gap-2 text-xs tracking-[0.1em] uppercase font-medium text-[var(--color-obsidian)]"
           >
-            <SlidersHorizontal size={16} /> Filter & Sort
+            <SlidersHorizontal size={14} /> Filters
           </button>
         </div>
 
-        <div className="flex gap-10">
+        <div className="flex gap-16 xl:gap-24">
           {/* Desktop Sidebar */}
-          <aside className="hidden lg:block w-56 flex-shrink-0">
-            <div className="sticky top-28">
-              <FilterContent />
+          <aside className="hidden lg:block w-48 flex-shrink-0">
+            <div className="sticky top-32">
+              {FilterContent()}
               {hasFilters && (
                 <button
                   onClick={() => { setSelectedCategory('all'); setSelectedMaterial('all'); setSelectedStyle('all'); }}
-                  className="mt-6 text-xs tracking-[0.06em] uppercase text-[var(--color-champagne)] font-medium hover:underline"
+                  className="mt-12 text-[10px] tracking-[0.2em] uppercase text-[var(--color-muted)] border-b border-[var(--color-muted)] pb-1 hover:text-[var(--color-obsidian)] hover:border-[var(--color-obsidian)] transition-colors"
                 >
-                  Clear All Filters
+                  Clear Adjustments
                 </button>
               )}
             </div>
@@ -135,23 +153,23 @@ export default function ShopPage() {
 
           {/* Product Grid */}
           <div className="flex-1">
-            <div className="hidden lg:flex items-center justify-between mb-6">
-              <p className="text-sm text-[var(--color-muted)]">{filtered.length} pieces</p>
+            <div className="hidden lg:flex items-center justify-end mb-10 border-b border-[var(--color-border)] pb-4">
+              <p className="text-[10px] tracking-[0.2em] text-[var(--color-muted)] uppercase font-light">{filtered.length} Curated Pieces</p>
             </div>
             {filtered.length > 0 ? (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-10 lg:gap-x-8 lg:gap-y-16">
                 {filtered.map((product, i) => (
                   <ProductCard key={product.id} product={product} index={i} />
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20">
-                <p className="text-[var(--color-muted)]">No jewellery found matching your filters.</p>
+              <div className="text-center py-32">
+                <p className="text-lg text-[var(--color-muted)] font-light mb-8">No pieces found matching your current curation.</p>
                 <button
                   onClick={() => { setSelectedCategory('all'); setSelectedMaterial('all'); setSelectedStyle('all'); }}
-                  className="btn btn-ghost mt-4"
+                  className="text-xs tracking-[0.15em] uppercase text-[var(--color-champagne-dark)] border-b border-[var(--color-champagne-dark)] pb-1 hover:text-[var(--color-obsidian)] hover:border-[var(--color-obsidian)] transition-colors"
                 >
-                  Clear Filters
+                  Reset Collection
                 </button>
               </div>
             )}
@@ -166,7 +184,7 @@ export default function ShopPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-[var(--color-obsidian)]/40"
+            className="fixed inset-0 z-[100] bg-[var(--color-obsidian)]/80 backdrop-blur-sm"
             onClick={() => setMobileFiltersOpen(false)}
           >
             <motion.div
@@ -174,21 +192,21 @@ export default function ShopPage() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 bottom-0 w-80 bg-[var(--color-ivory)] p-6 overflow-y-auto"
+              className="absolute right-0 top-0 bottom-0 w-full max-w-[320px] bg-[var(--color-ivory)] p-8 overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-sm tracking-[0.12em] uppercase font-medium">Filters</h2>
-                <button onClick={() => setMobileFiltersOpen(false)} aria-label="Close filters">
-                  <X size={20} />
+              <div className="flex items-center justify-between mb-12">
+                <h2 className="text-xs tracking-[0.2em] uppercase font-medium text-[var(--color-obsidian)]">Curation</h2>
+                <button onClick={() => setMobileFiltersOpen(false)} aria-label="Close filters" className="text-[var(--color-obsidian)]">
+                  <X size={24} strokeWidth={1.5} />
                 </button>
               </div>
-              <FilterContent />
+              {FilterContent()}
               <button
                 onClick={() => setMobileFiltersOpen(false)}
-                className="btn btn-primary w-full mt-8"
+                className="w-full bg-[var(--color-obsidian)] text-white py-4 mt-12 text-xs tracking-[0.15em] uppercase hover:bg-[var(--color-champagne-dark)] transition-colors"
               >
-                Show {filtered.length} Results
+                View {filtered.length} Pieces
               </button>
             </motion.div>
           </motion.div>

@@ -5,6 +5,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { WhatsAppFAB } from '@/components/WhatsAppFAB';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
+import NextTopLoader from 'nextjs-toploader';
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -22,11 +23,11 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Gupta Jwellery — Timeless Jewellery. Modern Elegance. | Kurukshetra',
-    template: '%s | Gupta Jwellery',
+    default: 'Radhika Jewellery — Timeless Jewellery. Modern Elegance. | Kurukshetra',
+    template: '%s | Radhika Jewellery',
   },
   description:
-    'Discover exquisite gold, diamond and bridal jewellery at Gupta Jwellery, Kurukshetra. Visit our showroom at Sector 7 or enquire on WhatsApp for a personal jewellery consultation.',
+    'Discover exquisite gold, diamond and bridal jewellery at Radhika Jewellery, Kurukshetra. Visit our showroom at Sector 7 or enquire on WhatsApp for a personal jewellery consultation.',
   keywords: [
     'jewellery shop in Kurukshetra',
     'jewellers in Kurukshetra',
@@ -34,15 +35,15 @@ export const metadata: Metadata = {
     'bridal jewellery Kurukshetra',
     'diamond jewellery Kurukshetra',
     'gold jewellery Sector 7 Kurukshetra',
-    'Gupta Jwellery',
+    'Radhika Jewellery',
   ],
   openGraph: {
-    title: 'Gupta Jwellery — Timeless Jewellery. Modern Elegance.',
+    title: 'Radhika Jewellery — Timeless Jewellery. Modern Elegance.',
     description:
-      'Discover exquisite gold, diamond and bridal jewellery at Gupta Jwellery, Kurukshetra.',
+      'Discover exquisite gold, diamond and bridal jewellery at Radhika Jewellery, Kurukshetra.',
     type: 'website',
     locale: 'en_IN',
-    siteName: 'Gupta Jwellery',
+    siteName: 'Radhika Jewellery',
   },
   robots: {
     index: true,
@@ -64,9 +65,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'JewelryStore',
-              name: 'Gupta Jwellery',
+              name: 'Radhika Jewellery',
               description:
-                'Discover exquisite gold, diamond and bridal jewellery at Gupta Jwellery, Kurukshetra.',
+                'Discover exquisite gold, diamond and bridal jewellery at Radhika Jewellery, Kurukshetra.',
               telephone: '+91 98960 07477',
               address: {
                 '@type': 'PostalAddress',
@@ -82,6 +83,17 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
+        <NextTopLoader 
+          color="#C6A15B" 
+          initialPosition={0.08} 
+          crawlSpeed={200} 
+          height={2} 
+          crawl={true} 
+          showSpinner={false} 
+          easing="ease" 
+          speed={200} 
+          shadow="0 0 10px #C6A15B,0 0 5px #C6A15B" 
+        />
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />

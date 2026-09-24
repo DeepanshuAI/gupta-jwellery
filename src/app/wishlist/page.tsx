@@ -15,73 +15,82 @@ export default function WishlistPage() {
   const wishlistProducts = products.filter((p) => items.includes(p.id));
 
   return (
-    <div className="py-8 lg:py-16 min-h-[60vh]">
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
-        <div className="text-center mb-10 lg:mb-14">
-          <h1 className="font-[family-name:var(--font-display)] text-[var(--color-obsidian)] text-3xl lg:text-4xl">
-            Your Saved Pieces
+    <div className="bg-[var(--color-ivory)] pt-24 lg:pt-32 pb-24 min-h-screen">
+      <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
+        
+        <div className="text-center mb-16 lg:mb-24">
+          <p className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-champagne-dark)] mb-6">Personal Collection</p>
+          <h1 className="font-[family-name:var(--font-display)] text-[var(--color-obsidian)] text-4xl lg:text-5xl">
+            Saved Pieces
           </h1>
-          {wishlistProducts.length > 0 && (
-            <p className="mt-2 text-sm text-[var(--color-muted)]">{wishlistProducts.length} items saved</p>
-          )}
         </div>
 
         {wishlistProducts.length === 0 ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-16"
+            transition={{ duration: 1 }}
+            className="text-center py-24 border-t border-[var(--color-border)]"
           >
-            <Heart size={48} strokeWidth={1} className="mx-auto text-[var(--color-neutral)] mb-4" />
-            <h2 className="font-[family-name:var(--font-display)] text-xl text-[var(--color-obsidian)] mb-2">
-              No saved pieces yet
+            <Heart size={32} strokeWidth={1} className="mx-auto text-[var(--color-muted)] mb-8 opacity-50" />
+            <h2 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-obsidian)] mb-4">
+              Your collection is empty
             </h2>
-            <p className="text-sm text-[var(--color-muted)] mb-6">
-              Browse our collection and tap the heart icon to save pieces you love.
+            <p className="text-sm text-[var(--color-muted)] font-light mb-10">
+              Explore our boutique and select pieces you wish to save for later.
             </p>
-            <Link href="/shop" className="btn btn-primary">
-              Explore Jewellery
+            <Link href="/shop" className="text-xs tracking-[0.15em] uppercase text-[var(--color-obsidian)] border-b border-[var(--color-obsidian)] pb-1 hover:text-[var(--color-champagne-dark)] hover:border-[var(--color-champagne-dark)] transition-colors">
+              Explore Collection
             </Link>
           </motion.div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
+            <div className="flex justify-between items-end border-b border-[var(--color-border)] pb-4 mb-8">
+              <h2 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-obsidian)]">Pieces</h2>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-muted)]">
+                {wishlistProducts.length} item{wishlistProducts.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+            
             {wishlistProducts.map((product, i) => (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="flex gap-4 lg:gap-6 bg-white p-4 items-center"
+                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
+                className="flex flex-col sm:flex-row gap-6 lg:gap-10 p-6 bg-[var(--color-surface)] border border-[var(--color-border)] items-center group"
               >
-                <Link href={`/jewellery/${product.slug}`} className="relative w-20 h-20 lg:w-24 lg:h-24 flex-shrink-0 overflow-hidden bg-[var(--color-surface-alt)]">
-                  <Image src={product.images[0]} alt={product.name} fill className="object-cover" sizes="96px" />
+                <Link href={`/jewellery/${product.slug}`} className="relative w-32 h-40 flex-shrink-0 overflow-hidden bg-[var(--color-surface-alt)]">
+                  <Image src={product.images[0]} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="128px" />
                 </Link>
-                <div className="flex-1 min-w-0">
+                
+                <div className="flex-1 min-w-0 text-center sm:text-left">
+                  <p className="text-[9px] tracking-[0.2em] uppercase text-[var(--color-muted)] mb-2">
+                    {product.category === 'mens' ? "Men's" : product.category}
+                  </p>
                   <Link href={`/jewellery/${product.slug}`}>
-                    <h3 className="font-[family-name:var(--font-display)] text-lg text-[var(--color-obsidian)] hover:text-[var(--color-champagne)] transition-colors truncate">
+                    <h3 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-obsidian)] hover:text-[var(--color-champagne-dark)] transition-colors truncate">
                       {product.name}
                     </h3>
                   </Link>
-                  <p className="text-sm text-[var(--color-muted)] capitalize">{product.category}</p>
-                  <p className="text-sm font-medium text-[var(--color-obsidian)] mt-1">{product.priceDisplay}</p>
+                  <p className="text-sm font-[family-name:var(--font-display)] text-[var(--color-obsidian)] mt-2 italic">{product.priceDisplay}</p>
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
+                
+                <div className="flex sm:flex-col items-center gap-6 sm:gap-4 flex-shrink-0 mt-4 sm:mt-0">
                   <a
                     href={getProductWhatsAppUrl(product.name)}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => trackWhatsAppClick(product.name)}
-                    className="p-2 text-[#25D366] hover:bg-[#25D366]/10 transition-colors"
-                    aria-label="Enquire on WhatsApp"
+                    className="flex items-center gap-2 text-[10px] tracking-[0.1em] uppercase text-[var(--color-obsidian)] hover:text-[var(--color-champagne-dark)] transition-colors border-b border-transparent hover:border-[var(--color-champagne-dark)] pb-1"
                   >
-                    <MessageCircle size={20} />
+                    <MessageCircle size={14} strokeWidth={1.5} /> Enquire
                   </a>
                   <button
                     onClick={() => remove(product.id)}
-                    className="p-2 text-[var(--color-muted)] hover:text-red-500 transition-colors"
-                    aria-label="Remove from wishlist"
+                    className="flex items-center gap-2 text-[10px] tracking-[0.1em] uppercase text-[var(--color-muted)] hover:text-red-900 transition-colors"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={14} strokeWidth={1.5} /> Remove
                   </button>
                 </div>
               </motion.div>

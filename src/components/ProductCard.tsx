@@ -2,12 +2,11 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, ArrowRight, MessageCircle } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { Product } from '@/data/products';
-import { getProductWhatsAppUrl } from '@/data/store-info';
 import { useWishlist } from '@/hooks/useWishlist';
-import { trackWhatsAppClick, trackWishlistAdd } from '@/lib/analytics';
+import { trackWishlistAdd } from '@/lib/analytics';
 
 interface ProductCardProps {
   product: Product;
@@ -20,73 +19,57 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group relative"
+      transition={{ duration: 1, delay: (index % 3) * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className="group"
     >
-      {/* Image Container */}
-      <Link href={`/jewellery/${product.slug}`} className="block relative overflow-hidden bg-[var(--color-surface-alt)] aspect-[3/4]">
-        <Image
-          src={product.images[0]}
-          alt={product.name}
-          fill
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-[var(--color-obsidian)]/0 group-hover:bg-[var(--color-obsidian)]/10 transition-colors duration-500" />
-        {/* View Details on hover */}
-        <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
-          <span className="inline-flex items-center gap-2 text-white text-xs tracking-[0.08em] uppercase font-medium">
-            View Details <ArrowRight size={14} strokeWidth={1.5} />
-          </span>
-        </div>
-      </Link>
+      <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-surface-alt)] mb-6">
+        <Link href={`/jewellery/${product.slug}`} className="block w-full h-full">
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            className="object-cover transition-transform duration-1000 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+          {/* Subtle overlay */}
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-700" />
+        </Link>
+        
+        {/* Wishlist Button - Only visible on hover or if wished */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            toggle(product.id);
+            if (!isWished) trackWishlistAdd(product.name);
+          }}
+          className={`absolute top-4 right-4 z-10 p-3 bg-white/90 backdrop-blur-sm transition-all duration-500 rounded-full ${isWished ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0'}`}
+          aria-label={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
+        >
+          <Heart
+            size={14}
+            strokeWidth={1.5}
+            className={`transition-colors duration-300 ${isWished ? 'fill-[var(--color-obsidian)] text-[var(--color-obsidian)]' : 'text-[var(--color-charcoal)] hover:text-[var(--color-obsidian)] hover:fill-[var(--color-obsidian)]'}`}
+          />
+        </button>
+      </div>
 
-      {/* Wishlist Button */}
-      <button
-        onClick={() => {
-          toggle(product.id);
-          if (!isWished) trackWishlistAdd(product.name);
-        }}
-        className="absolute top-3 right-3 z-10 p-2 bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
-        aria-label={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
-      >
-        <Heart
-          size={18}
-          strokeWidth={1.5}
-          className={`transition-colors ${isWished ? 'fill-[var(--color-champagne)] text-[var(--color-champagne)]' : 'text-[var(--color-charcoal)]'}`}
-        />
-      </button>
-
-      {/* Product Info */}
-      <div className="mt-4 space-y-1.5">
-        <p className="text-[10px] tracking-[0.14em] uppercase text-[var(--color-muted)] font-medium">
-          {product.category === 'mens' ? "Men's" : product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+      {/* Editorial Product Info */}
+      <div className="flex flex-col items-center text-center space-y-3">
+        <p className="text-[9px] tracking-[0.2em] uppercase text-[var(--color-muted)]">
+          {product.category === 'mens' ? "Men's" : product.category}
         </p>
         <Link href={`/jewellery/${product.slug}`}>
-          <h3 className="font-[family-name:var(--font-display)] text-lg text-[var(--color-charcoal)] group-hover:text-[var(--color-champagne)] transition-colors leading-snug">
+          <h3 className="font-[family-name:var(--font-display)] text-xl lg:text-2xl text-[var(--color-obsidian)] group-hover:text-[var(--color-champagne-dark)] transition-colors duration-500 leading-snug">
             {product.name}
           </h3>
         </Link>
-        <p className="text-sm text-[var(--color-charcoal)] font-medium">
+        <p className="text-sm font-light text-[var(--color-muted)] italic font-[family-name:var(--font-display)]">
           {product.priceDisplay}
         </p>
       </div>
-
-      {/* WhatsApp CTA */}
-      <a
-        href={getProductWhatsAppUrl(product.name)}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => trackWhatsAppClick(product.name)}
-        className="mt-3 inline-flex items-center gap-2 text-xs tracking-[0.06em] uppercase text-[var(--color-charcoal)] hover:text-[#25D366] transition-colors font-medium"
-      >
-        <MessageCircle size={14} strokeWidth={1.5} />
-        Enquire on WhatsApp
-      </a>
     </motion.article>
   );
 }

@@ -3,14 +3,19 @@
 import { use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, MessageCircle, Phone, Calendar, MapPin, Shield, HeartHandshake, Check, ArrowLeft } from 'lucide-react';
+import { Heart, MessageCircle, Calendar, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getProductBySlug, getFeaturedProducts } from '@/data/products';
-import { getProductWhatsAppUrl, getCallUrl, getWhatsAppUrl } from '@/data/store-info';
+import { getProductWhatsAppUrl } from '@/data/store-info';
 import { useWishlist } from '@/hooks/useWishlist';
-import { trackWhatsAppClick, trackCallClick, trackWishlistAdd } from '@/lib/analytics';
+import { trackWhatsAppClick, trackWishlistAdd } from '@/lib/analytics';
 import { ProductCard } from '@/components/ProductCard';
-import { SectionHeading } from '@/components/SectionHeading';
+
+const fadeUp = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 1, ease: [0.21, 0.47, 0.32, 0.98] },
+};
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -19,13 +24,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
   if (!product) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-ivory)]">
         <div className="text-center">
-          <h1 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-obsidian)] mb-4">
-            Product Not Found
+          <h1 className="font-[family-name:var(--font-display)] text-3xl text-[var(--color-obsidian)] mb-6">
+            Piece Not Found
           </h1>
-          <Link href="/shop" className="btn btn-primary">
-            Browse Jewellery
+          <Link href="/shop" className="text-xs tracking-[0.15em] uppercase text-[var(--color-champagne-dark)] border-b border-[var(--color-champagne-dark)] pb-1 hover:text-[var(--color-obsidian)] hover:border-[var(--color-obsidian)] transition-colors">
+            Return to Collection
           </Link>
         </div>
       </div>
@@ -33,160 +38,153 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   }
 
   const isWished = isInWishlist(product.id);
-  const relatedProducts = getFeaturedProducts().filter((p) => p.id !== product.id).slice(0, 4);
+  const relatedProducts = getFeaturedProducts().filter((p) => p.id !== product.id).slice(0, 3);
 
   return (
-    <div className="pb-16 lg:pb-24">
+    <div className="bg-[var(--color-ivory)] min-h-screen pt-24 lg:pt-32 pb-24">
       {/* Breadcrumb */}
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-10 py-4">
-        <nav className="flex items-center gap-2 text-xs text-[var(--color-muted)]">
-          <Link href="/" className="hover:text-[var(--color-charcoal)] transition-colors">Home</Link>
-          <span>/</span>
-          <Link href="/shop" className="hover:text-[var(--color-charcoal)] transition-colors">Shop</Link>
-          <span>/</span>
-          <Link href={`/shop/${product.category}`} className="hover:text-[var(--color-charcoal)] transition-colors capitalize">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-10 lg:px-16 py-6">
+        <nav className="flex items-center gap-4 text-[10px] tracking-[0.2em] uppercase text-[var(--color-muted)]">
+          <Link href="/shop" className="hover:text-[var(--color-obsidian)] transition-colors">Collection</Link>
+          <span className="w-4 border-b border-[var(--color-muted)]"></span>
+          <Link href={`/shop`} className="hover:text-[var(--color-obsidian)] transition-colors">
             {product.category === 'mens' ? "Men's" : product.category}
           </Link>
-          <span>/</span>
-          <span className="text-[var(--color-charcoal)]">{product.name}</span>
+          <span className="w-4 border-b border-[var(--color-muted)]"></span>
+          <span className="text-[var(--color-obsidian)]">{product.name}</span>
         </nav>
       </div>
 
-      {/* Product */}
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
-          {/* Gallery */}
+      {/* Main Product Layout */}
+      <div className="max-w-[1600px] mx-auto px-6 md:px-10 lg:px-16 mt-8">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-24 items-start">
+          
+          {/* LEFT: Art Gallery Presentation */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-4"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="lg:col-span-7 space-y-8"
           >
-            <div className="relative aspect-square bg-[var(--color-surface-alt)] overflow-hidden">
+            <div className="relative aspect-[4/5] bg-[var(--color-surface-alt)] overflow-hidden">
               <Image
                 src={product.images[0]}
                 alt={product.name}
                 fill
                 className="object-cover"
                 priority
-                sizes="50vw"
+                sizes="(max-width: 1024px) 100vw, 60vw"
               />
             </div>
+            {product.images.length > 1 && (
+              <div className="grid grid-cols-2 gap-8">
+                {product.images.slice(1, 3).map((img, i) => (
+                  <div key={i} className="relative aspect-square bg-[var(--color-surface-alt)] overflow-hidden">
+                    <Image
+                      src={img}
+                      alt={`${product.name} detail ${i + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 50vw, 30vw"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
 
-          {/* Info */}
+          {/* RIGHT: Curatorial Info */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:py-4"
+            {...fadeUp}
+            className="lg:col-span-5 lg:sticky lg:top-32 lg:py-10"
           >
-            <Link href="/shop" className="inline-flex items-center gap-1.5 text-xs tracking-[0.06em] uppercase text-[var(--color-muted)] hover:text-[var(--color-charcoal)] transition-colors mb-4">
-              <ArrowLeft size={14} /> Back to Shop
-            </Link>
-
-            <p className="text-xs tracking-[0.14em] uppercase text-[var(--color-champagne)] font-medium mb-2">
-              {product.category === 'mens' ? "Men's" : product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-champagne-dark)] mb-6">
+              {product.category === 'mens' ? "Men's Edit" : product.category.charAt(0).toUpperCase() + product.category.slice(1) + " Collection"}
             </p>
-            <h1 className="font-[family-name:var(--font-display)] text-3xl lg:text-4xl text-[var(--color-obsidian)] leading-tight">
+            
+            <h1 className="font-[family-name:var(--font-display)] text-4xl lg:text-5xl text-[var(--color-obsidian)] leading-[1.1] mb-6">
               {product.name}
             </h1>
-            <p className="mt-3 text-xl font-medium text-[var(--color-obsidian)]">
+            
+            <p className="text-xl font-[family-name:var(--font-display)] text-[var(--color-champagne-dark)] italic mb-10">
               {product.priceDisplay}
             </p>
-            <p className="mt-4 text-[var(--color-muted)] leading-relaxed">
-              {product.description}
-            </p>
-
-            {/* Attributes */}
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              {[
-                { label: 'Material', value: product.material },
-                { label: 'Purity', value: product.purity },
-                { label: 'Weight', value: product.weight },
-                { label: 'Stone', value: product.gemstone },
-                { label: 'SKU', value: product.sku },
-                { label: 'Availability', value: product.availability === 'in-stock' ? 'In Stock' : product.availability === 'made-to-order' ? 'Made to Order' : 'Enquire' },
-              ].map((attr) => (
-                <div key={attr.label} className="py-2 border-b border-[var(--color-border)]">
-                  <p className="text-[10px] tracking-[0.1em] uppercase text-[var(--color-muted)]">{attr.label}</p>
-                  <p className="text-sm text-[var(--color-charcoal)] mt-0.5">{attr.value}</p>
-                </div>
-              ))}
+            
+            <div className="space-y-6 text-[var(--color-muted)] font-light leading-relaxed max-w-md">
+              <p>{product.description}</p>
             </div>
 
-            {/* CTAs */}
-            <div className="mt-8 space-y-3">
+            {/* Specifications */}
+            <div className="mt-16 mb-16 max-w-md">
+              <h3 className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-obsidian)] mb-6 border-b border-[var(--color-border)] pb-4">Specifications</h3>
+              <ul className="space-y-4">
+                {[
+                  { label: 'Material', value: product.material },
+                  { label: 'Purity', value: product.purity },
+                  { label: 'Weight', value: product.weight },
+                  { label: 'Stone', value: product.gemstone },
+                  { label: 'Identifier', value: product.sku },
+                ].map((attr) => (
+                  <li key={attr.label} className="flex justify-between items-center text-sm font-light">
+                    <span className="text-[var(--color-muted)]">{attr.label}</span>
+                    <span className="text-[var(--color-obsidian)] text-right">{attr.value}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Action Area */}
+            <div className="space-y-4 max-w-md">
               <a
                 href={getProductWhatsAppUrl(product.name)}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackWhatsAppClick(product.name)}
-                className="btn btn-whatsapp w-full"
+                className="w-full flex items-center justify-center gap-3 bg-[var(--color-obsidian)] text-white py-4 text-xs tracking-[0.15em] uppercase hover:bg-[var(--color-champagne-dark)] transition-colors duration-500"
               >
-                <MessageCircle size={18} /> Enquire on WhatsApp
+                <MessageCircle size={16} strokeWidth={1.5} /> Enquire with Concierge
               </a>
-              <div className="grid grid-cols-2 gap-3">
-                <Link href="/appointment" className="btn btn-primary">
-                  <Calendar size={16} /> Book Appointment
+              
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={() => {
+                    toggle(product.id);
+                    if (!isWished) trackWishlistAdd(product.name);
+                  }}
+                  className={`flex items-center justify-center gap-3 border border-[var(--color-obsidian)] py-4 text-xs tracking-[0.15em] uppercase transition-colors duration-500 ${isWished ? 'bg-[var(--color-obsidian)] text-white' : 'text-[var(--color-obsidian)] hover:bg-[var(--color-obsidian)] hover:text-white'}`}
+                >
+                  <Heart size={16} strokeWidth={1.5} className={isWished ? 'fill-current' : ''} />
+                  {isWished ? 'Saved' : 'Save Piece'}
+                </button>
+                <Link 
+                  href="/appointment" 
+                  className="flex items-center justify-center gap-3 border border-[var(--color-border)] py-4 text-xs tracking-[0.15em] uppercase text-[var(--color-obsidian)] hover:border-[var(--color-obsidian)] transition-colors duration-500"
+                >
+                  <Calendar size={16} strokeWidth={1.5} /> View in Person
                 </Link>
-                <a href={getCallUrl()} onClick={() => trackCallClick()} className="btn btn-secondary">
-                  <Phone size={16} /> Call Store
-                </a>
               </div>
-              <button
-                onClick={() => {
-                  toggle(product.id);
-                  if (!isWished) trackWishlistAdd(product.name);
-                }}
-                className={`btn w-full ${isWished ? 'btn-champagne' : 'btn-secondary'}`}
-              >
-                <Heart size={16} className={isWished ? 'fill-current' : ''} />
-                {isWished ? 'Saved to Wishlist' : 'Add to Wishlist'}
-              </button>
             </div>
 
-            {/* Trust Panel */}
-            <div className="mt-8 p-5 bg-[var(--color-surface-alt)] space-y-3">
-              {[
-                { icon: Shield, text: 'Quality Assured' },
-                { icon: HeartHandshake, text: 'Personal Assistance' },
-                { icon: MapPin, text: 'Visit Our Store' },
-                { icon: Check, text: 'Secure Purchase Guidance' },
-              ].map((item) => (
-                <div key={item.text} className="flex items-center gap-3">
-                  <item.icon size={16} className="text-[var(--color-champagne)]" />
-                  <span className="text-sm text-[var(--color-charcoal)]">{item.text}</span>
-                </div>
-              ))}
+            {/* Subtle Location Hint */}
+            <div className="mt-12 flex items-center gap-3 text-[10px] tracking-[0.1em] uppercase text-[var(--color-muted)]">
+              <MapPin size={12} /> Available at Kurukshetra Showroom
             </div>
-
-            {/* Try it in Store */}
-            <div className="mt-6 p-5 border border-[var(--color-border)]">
-              <h3 className="font-[family-name:var(--font-display)] text-lg text-[var(--color-obsidian)] mb-1">
-                See It In Person
-              </h3>
-              <p className="text-sm text-[var(--color-muted)] mb-3">
-                Love this design? Visit our Kurukshetra showroom to see it up close.
-              </p>
-              <Link href="/store" className="btn btn-ghost text-sm">
-                Plan My Visit
-              </Link>
-            </div>
+            
           </motion.div>
         </div>
       </div>
 
-      {/* Related Products */}
+      {/* Related Curation */}
       {relatedProducts.length > 0 && (
-        <section className="mt-16 lg:mt-24">
-          <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
-            <SectionHeading title="You May Also Love" />
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-              {relatedProducts.map((p, i) => (
-                <ProductCard key={p.id} product={p} index={i} />
-              ))}
-            </div>
+        <section className="mt-32 lg:mt-48 max-w-[1600px] mx-auto px-6 lg:px-10 border-t border-[var(--color-border)] pt-24">
+          <div className="text-center lg:text-left mb-16">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-champagne-dark)] mb-4">Curated For You</p>
+            <h2 className="font-[family-name:var(--font-display)] text-3xl lg:text-5xl text-[var(--color-obsidian)]">Related Pieces</h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-10 lg:gap-x-8 lg:gap-y-16">
+            {relatedProducts.map((p, i) => (
+              <ProductCard key={p.id} product={p} index={i} />
+            ))}
           </div>
         </section>
       )}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-const WISHLIST_KEY = 'gupta-jwellery-wishlist';
+const WISHLIST_KEY = 'radhika-jewellery-wishlist';
 
 export function useWishlist() {
   const [items, setItems] = useState<string[]>([]);
@@ -11,6 +11,7 @@ export function useWishlist() {
     try {
       const stored = localStorage.getItem(WISHLIST_KEY);
       if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setItems(JSON.parse(stored));
       }
     } catch {

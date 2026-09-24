@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════
-   GUPTA JWELLERY — Design System
+   RADHIKA JEWELLERY — Design System
    Luxury = Restraint. Typography + Space + Photography.
    ═══════════════════════════════════════════════════════════ */
 
 @theme inline {
   /* ── Brand Colors ── */
-  --color-obsidian: #141414;
-  --color-ivory: #F7F3EC;
+  --color-obsidian: #171615;
+  --color-ivory: #F5F1E9;
   --color-champagne: #C6A15B;
-  --color-charcoal: #24211D;
-  --color-neutral: #E6DED1;
-  --color-champagne-light: #D4B577;
-  --color-champagne-dark: #A8863D;
+  --color-charcoal: #171615;
+  --color-neutral: #E8E0D3;
+  --color-champagne-light: #D5B97A;
+  --color-champagne-dark: #8A8176;
 
   /* ── Semantic Colors ── */
-  --color-background: #F7F3EC;
-  --color-foreground: #24211D;
+  --color-background: #F5F1E9;
+  --color-foreground: #171615;
   --color-surface: #FFFFFF;
-  --color-surface-alt: #F0EBE3;
-  --color-border: #E6DED1;
-  --color-border-light: #F0EBE3;
-  --color-muted: #8A8278;
+  --color-surface-alt: #E8E0D3;
+  --color-border: #E8E0D3;
+  --color-border-light: #F5F1E9;
+  --color-muted: #8A8176;
 
   /* ── Typography ── */
   --font-display: var(--font-cormorant);
